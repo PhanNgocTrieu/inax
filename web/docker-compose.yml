@@ -1,0 +1,23 @@
+# Chạy bản production bằng Docker trên máy hoặc VPS:
+#   cp .env.example .env.production   # rồi điền giá trị thật
+#   docker compose up -d --build
+services:
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+        SITE_NOINDEX: ${SITE_NOINDEX:-}
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env.production
+    environment:
+      DATABASE_URL: file:/data/greenhabitat.db
+      MEDIA_DIR: /data/media
+    volumes:
+      - data:/data
+
+volumes:
+  data:
